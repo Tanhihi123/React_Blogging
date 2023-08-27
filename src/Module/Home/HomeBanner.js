@@ -13,15 +13,14 @@ const HomeBannerStyles = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-
     &-content {
       max-width: 400px;
       color: white;
     }
     &-image {
-      width: 800px;
+      width: 500px;
       height: 800px;
-      transform: translateX(50%);
+      transform: translateX(65%) translateY(18%);
     }
     &-heading {
       font-size: 36px;
@@ -30,6 +29,11 @@ const HomeBannerStyles = styled.div`
     &-desc {
       line-height: 1.75;
       margin-bottom: 40px;
+    }
+    &-img {
+      width: 500px;
+      height: 500px;
+      object-fit: contain;
     }
   }
 `;
@@ -52,7 +56,7 @@ const HomeBanner = () => {
             <Button onClick={() => navigate("/sign-up")} kind="secondary">Get started</Button>
           </div>
           <div className="banner-image">
-            <img src="/Tansama.png" alt="" />
+            <img src="/Tansama.png" alt="" className="banner-img" />
           </div>
         </div>
       </div>
