@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import PostCategory from "./PostCategory";
 import PostTitle from "./PostTitle";
 import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
+import { collection, doc, getDoc, query, where } from "firebase/firestore";
+import { db } from "FirebaseApp/Firebase-config";
 const PostFeatureItemStyles = styled.div`
   width: 100%;
   border-radius: 16px;
@@ -48,22 +50,44 @@ const PostFeatureItemStyles = styled.div`
     height: 272px;
   }
 `;
-const PostFeatureItem = () => {
+const PostFeatureItem = ({ data }) => {
+  const [category, setCategories] = useState("");
+  const [user, setUser] = useState();
+  useEffect(() => {
+    async function fetchCategory() {
+      if (data.categoryID) {
+        const docRef = doc(db, "categories", data.categoryID);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.data()) {
+          setCategories(docSnap.data());
+        }
+      }
+    }
+    fetchCategory();
+  }, [data.categoryID]);
+  useEffect(() => {
+    async function fetchUser() {
+      if (data.userId) {
+        const docRef = doc(db, "users", data.userId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.data()) {
+          setUser(docSnap.data());
+        }
+      }
+    }
+    fetchUser();
+  }, [data.userId]);
+  if (!data || !data.id) return null;
   return (
     <PostFeatureItemStyles>
-      <PostImage
-        url="https://images.unsplash.com/photo-1614624532983-4ce03382d63d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2662&q=80"
-        alt="unsplash"
-      ></PostImage>
+      <PostImage url={data.image} alt="unsplash"></PostImage>
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
-          <PostCategory>Kiến thức</PostCategory>
-          <PostMeta></PostMeta>
+          {category?.name && <PostCategory>{category.name}</PostCategory>}
+          <PostMeta authorName={user?.fullname}></PostMeta>
         </div>
-        <PostTitle size="big">
-          Hướng dẫn setup phòng cực chill dành cho người mới toàn tập
-        </PostTitle>
+        <PostTitle size="big">{data.title}</PostTitle>
       </div>
     </PostFeatureItemStyles>
   );

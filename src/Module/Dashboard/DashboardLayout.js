@@ -1,8 +1,10 @@
-import React from 'react';
-import styled from 'styled-components';
-import DashboardHeader from './DashboardHeader';
-import Sidebar from './Sidebar';
-import { Outlet } from 'react-router-dom';
+import React from "react";
+import styled from "styled-components";
+import DashboardHeader from "./DashboardHeader";
+import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
+import { useAuth } from "Contexts/Auth-context";
+import NotFoundPage from "Pages/NotFoundPage";
 const DashboardStyles = styled.div`
   max-width: 1600px;
   margin: 0 auto;
@@ -24,8 +26,10 @@ const DashboardStyles = styled.div`
   }
 `;
 const DashboardLayout = () => {
-    return (
-        <DashboardStyles>
+  const { userInfo } = useAuth();
+  if (!userInfo) return <NotFoundPage></NotFoundPage>;
+  return (
+    <DashboardStyles>
       <DashboardHeader></DashboardHeader>
       <div className="dashboard-main">
         <Sidebar></Sidebar>
@@ -34,7 +38,7 @@ const DashboardLayout = () => {
         </div>
       </div>
     </DashboardStyles>
-    );
+  );
 };
 
 export default DashboardLayout;

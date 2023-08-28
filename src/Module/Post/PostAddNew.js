@@ -4,83 +4,90 @@ import { Dropdown } from "Components/Dropdown";
 import { Field } from "Components/Field";
 import Input from "Components/input/input";
 import { Label } from "Components/label";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import slugify from "slugify";
 import styled from "styled-components";
 import { postStatus } from "utils/constants";
-import {
-  getStorage,
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-} from "firebase/storage";
-import { toast } from "react-toastify";
 import ImageUpload from "Components/Image/ImageUpload";
-import { addDoc, collection } from "firebase/firestore";
+import useFirebaseImg from "Hooks/UseFirebaseImg";
+import Toggle from "Components/Toggle/Toggle";
+import {
+  addDoc,
+  collection,
+  getDocs,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
 import { db } from "FirebaseApp/Firebase-config";
+import { useAuth } from "Contexts/Auth-context";
+import { toast } from "react-toastify";
 
 const PostAddNewStyles = styled.div``;
 const PostAddNew = () => {
-  const { control, watch, setValue, handleSubmit } = useForm({
+  const { userInfo } = useAuth();
+  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
       slug: "",
       status: 2,
-      category: "",
+      categoryID: "",
+      hot: false,
     },
   });
-  const [progress,setProgress] = useState(0);
-  const [image,setImage] = useState("");
   const watchStatus = watch("status");
-  // console.log("PostAddNew ~ watchStatus", watchStatus);
-  const watchCategory = watch("category");
+  const watchHot = watch("hot");
+  const { handleSelectImage, handleDelImage, progress, image, setImage,setProgress } = useFirebaseImg(
+    setValue,
+    getValues
+  );
+  const [categories, setCategories] = useState([]);
+  const [selectcategory, setSelectCategory] = useState({});
   const addPostHandler = async (values) => {
     const cloneValues = { ...values };
-    cloneValues.slug = slugify(values.slug || values.title);
+    cloneValues.slug = slugify(values.slug || values.title, { lower: true });
     cloneValues.status = +values.status;
-    console.log(cloneValues);
+    const colRef = collection(db, "posts");
+    await addDoc(colRef, {
+      ...cloneValues,
+      image,
+      userId: userInfo.uid,
+      // createdAt : serverTimestamp,
+    });
+    toast.success("Create new post successfully");
+    reset({
+      title: "",
+      slug: "",
+      status: 2,
+      categoryID: "",
+      hot: false,
+    });
+    setImage("");
+    setProgress(0);
+    setSelectCategory({});
   };
-  const handleUpLoadImg = (file) => {
-    const storage = getStorage();
-    const storageRef = ref(storage, "images/" + file.name);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progressPercent =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setProgress(progressPercent);
-        switch (snapshot.state) {
-          case "paused":
-            console.log("Upload is paused");
-            break;
-          case "running":
-            console.log("Upload is running");
-            break;
-          default:
-            console.log("Nothing at all");
-        }
-      },
-      (error) => {
-        toast.error("Can't upload Image");
-      },
-      () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("File available at", downloadURL);
-          setImage(downloadURL);
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "categories");
+      const q = query(colRef, where("status", "==", 1));
+      const querySnapshot = await getDocs(q);
+      let rs = [];
+      querySnapshot.forEach((doc) => {
+        rs.push({
+          id: doc.id,
+          ...doc.data(),
         });
-      }
-    );
+      });
+      setCategories(rs);
+    }
+    getData();
+  }, []);
+  const handleClickOption = (item) => {
+    setValue("categoryID", item.id);
+    setSelectCategory(item);
   };
-  const onSelectImg = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setValue("image", file);
-    handleUpLoadImg(file);
-  };
-
   return (
     <PostAddNewStyles>
       <h1 className="dashboard-heading">Add new post</h1>
@@ -108,11 +115,43 @@ const PostAddNew = () => {
           <Field>
             <Label>Image</Label>
             <ImageUpload
-              onChange={onSelectImg}
+              onChange={handleSelectImage}
+              handleDeleteImage={handleDelImage}
               className="h-[250px]"
               progress={progress}
               image={image}
             ></ImageUpload>
+          </Field>
+          <Field>
+            <Label>Category</Label>
+            <Dropdown>
+              <Dropdown.Select placeholder="Select the category"></Dropdown.Select>
+              <Dropdown.List>
+                {categories.length > 0 &&
+                  categories.map((item) => (
+                    <Dropdown.Option
+                      key={item.id}
+                      onClick={() => handleClickOption(item)}
+                    >
+                      {item.name}
+                    </Dropdown.Option>
+                  ))}
+              </Dropdown.List>
+            </Dropdown>
+            {selectcategory?.name && (
+              <span className="inline-block p-3 rounded-lg bg-green-50 text-sm text-green-600 font-medium">
+                {selectcategory?.name}
+              </span>
+            )}
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-x-10 mb-10">
+          <Field>
+            <Label>Feature post</Label>
+            <Toggle
+              on={watchHot === true}
+              onClick={() => setValue("hot", !watchHot)}
+            ></Toggle>
           </Field>
           <Field>
             <Label>Status</Label>
@@ -143,19 +182,6 @@ const PostAddNew = () => {
               </Radio>
             </div>
           </Field>
-        </div>
-        <div className="grid grid-cols-2 gap-x-10 mb-10">
-          <Field>
-            <Label>Category</Label>
-            <Dropdown>
-              <Dropdown.Option>Knowledge</Dropdown.Option>
-              <Dropdown.Option>Blockchain</Dropdown.Option>
-              <Dropdown.Option>Setup</Dropdown.Option>
-              <Dropdown.Option>Nature</Dropdown.Option>
-              <Dropdown.Option>Developer</Dropdown.Option>
-            </Dropdown>
-          </Field>
-          <Field></Field>
         </div>
         <Button type="submit" className="mx-auto">
           Add new post
