@@ -6,6 +6,7 @@ import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
 import { collection, doc, getDoc, query, where } from "firebase/firestore";
 import { db } from "FirebaseApp/Firebase-config";
+import slugify from "slugify";
 const PostFeatureItemStyles = styled.div`
   width: 100%;
   border-radius: 16px;
@@ -84,10 +85,18 @@ const PostFeatureItem = ({ data }) => {
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
-          {category?.name && <PostCategory>{category.name}</PostCategory>}
-          <PostMeta authorName={user?.fullname}></PostMeta>
+          {category?.name && (
+            <PostCategory to={category.slug}>{category.name}</PostCategory>
+          )}
+          <PostMeta
+            to={slugify(user?.fullname || "", { lower: true })}
+            authorName={user?.fullname}
+            data={data?.createdAt || ""}
+          ></PostMeta>
         </div>
-        <PostTitle size="big">{data.title}</PostTitle>
+        <PostTitle to={data.slug} size="big">
+          {data.title}
+        </PostTitle>
       </div>
     </PostFeatureItemStyles>
   );

@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const PostMetaStyles = styled.div`
@@ -18,12 +19,19 @@ const PostMetaStyles = styled.div`
     }
   }
 `;
-const PostMeta = ({ date = "Oct 29", authorName = "TanSama",className="" }) => {
+const PostMeta = ({
+  date = "Oct 29",
+  authorName = "TanSama",
+  className = "",
+  to = "/",
+}) => {
   return (
     <PostMetaStyles className={className}>
       <span className="post-time">{date}</span>
       <span className="post-dot"></span>
-      <span className="post-author">{authorName}</span>
+      <NavLink to={to}>
+        <span className="post-author">{authorName}</span>
+      </NavLink>
     </PostMetaStyles>
   );
 };
