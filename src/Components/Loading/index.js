@@ -1,2 +1,3 @@
 import Loading from "./Loading"
-export {Loading}
+import LoadingSpinner from "./LoadingSpinner"
+export {Loading,LoadingSpinner}

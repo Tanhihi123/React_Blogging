@@ -57,7 +57,7 @@ const PostAddNew = () => {
       cloneValues.slug = slugify(values.slug || values.title, { lower: true });
       cloneValues.status = +values.status;
       const colRef = collection(db, "posts");
-      await addDoc(colRef, {
+      await addDoc(colRef,{
         ...cloneValues,
         image,
         userId: userInfo.uid,

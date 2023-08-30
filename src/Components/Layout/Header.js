@@ -77,7 +77,7 @@ function getLastName(name) {
 const Header = () => {
   const navigate = useNavigate();
   const { userInfo } = useAuth();
-  console.log(userInfo);
+  // console.log(userInfo);
   return (
     <HeaderStyles>
       <div className="container">
@@ -141,7 +141,7 @@ const Header = () => {
             </Button>
           ) : (
             <div className="header-auth">
-              <strong>Helluuu anh </strong>
+              <strong>Helluuuu </strong>
               <span className="text-primary">
                 {getLastName(userInfo?.displayName)}
               </span>
