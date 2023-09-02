@@ -8,10 +8,15 @@ import {
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export default function useFirebaseImg(setValue,getValues) {
+export default function useFirebaseImg(
+  setValue,
+  getValues,
+  imageName = null,
+  cb = null
+) {
   const [progress, setProgress] = useState(0);
   const [image, setImage] = useState("");
-  if(!setValue || !getValues) return;
+  if (!setValue || !getValues) return;
   const handleUpLoadImg = (file) => {
     const storage = getStorage();
     const storageRef = ref(storage, "images/" + file.name);
@@ -52,19 +57,29 @@ export default function useFirebaseImg(setValue,getValues) {
   };
   const handleDelImage = () => {
     const storage = getStorage();
-    // Create a reference to the file to delete
-    const imageRef = ref(storage, "images/" + getValues("image_name"));
-
-    // Delete the file
+    const imageRef = ref(
+      storage,
+      "images/" + (imageName || getValues("image_name"))
+    );
     deleteObject(imageRef)
       .then(() => {
-        console.log("Remove image successfully !");
+        console.log("Remove image successfully");
         setImage("");
         setProgress(0);
+        cb && cb();
       })
       .catch((error) => {
-        console.log("Can't delete image");
+        console.log("handleDeleteImage ~ error", error);
+        console.log("Can not delete image");
+        setImage("");
       });
   };
-  return { handleSelectImage, image, progress, handleDelImage,setImage,setProgress };
+  return {
+    handleSelectImage,
+    image,
+    progress,
+    handleDelImage,
+    setImage,
+    setProgress,
+  };
 }

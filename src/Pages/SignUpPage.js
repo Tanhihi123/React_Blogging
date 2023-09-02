@@ -10,10 +10,11 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "FirebaseApp/Firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import AuthenticationPage from "./AuthenticationPage";
 import InputPasswordToggle from "Components/input/InputPasswordToggle";
 import slugify from "slugify";
+import { userRole, userStatus } from "utils/constants";
 const schema = yup.object({
   fullname: yup.string().required("Please enter your fullname"),
   Email: yup
@@ -44,11 +45,6 @@ const SignUpPage = () => {
   const handleSignUp = async (values) => {
     // console.log(values);
     if (!isValid) return;
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve();
-    //   }, 5000);
-    // });
     const user = await createUserWithEmailAndPassword(
       auth,
       values.Email,
@@ -56,24 +52,22 @@ const SignUpPage = () => {
     );
     await updateProfile(auth.currentUser, {
       displayName: values.fullname,
+      photoURL:
+        "https://img2.thuthuatphanmem.vn/uploads/2018/12/25/anh-gai-xinh-am-ap_012858881.jpg",
     });
-    const colRef = collection(db, "users");
     await setDoc(doc(db, "users", auth.currentUser.uid), {
       fullname: values.fullname,
       email: values.Email,
       password: values.Password,
       username: slugify(values.fullname, { lower: true }),
+      avatar:
+        "https://img2.thuthuatphanmem.vn/uploads/2018/12/25/anh-gai-xinh-am-ap_012858881.jpg",
+      status : userStatus.ACTIVE,
+      role : userRole.USER,
+      createdAt : serverTimestamp(),
     });
-    // await addDoc(colRef, {
-    //   fullname: values.fullname,
-    //   email: values.Email,
-    //   password: values.Password,
-
-    // });
     toast.success("Register successfully !!!");
-    setTimeout(() => {
-      navigate("/");
-    }, 2000);
+    navigate("/");
   };
   useEffect(() => {
     const arrErrors = Object.values(errors);

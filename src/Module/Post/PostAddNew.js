@@ -15,6 +15,8 @@ import Toggle from "Components/Toggle/Toggle";
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
   serverTimestamp,
@@ -33,8 +35,9 @@ const PostAddNew = () => {
       title: "",
       slug: "",
       status: 2,
-      categoryID: "",
       hot: false,
+      category: {},
+      user:{},
     },
   });
   const watchStatus = watch("status");
@@ -60,7 +63,6 @@ const PostAddNew = () => {
       await addDoc(colRef,{
         ...cloneValues,
         image,
-        userId: userInfo.uid,
         createdAt : serverTimestamp(),
       });
       toast.success("Create new post successfully");
@@ -68,22 +70,40 @@ const PostAddNew = () => {
         title: "",
         slug: "",
         status: 2,
-        categoryID: "",
         hot: false,
+        category : {},
+        user : {},
       });
       setImage("");
       setProgress(0);
       setSelectCategory({});
     } catch (error) {
       setLoading(false);
-    }
-    finally {
-      setLoading(false)
+    } finally {
+      setLoading(false);
     }
   };
   useEffect(() => {
+    async function fetchUserData() {
+      if (!userInfo.email) return;
+      const q = query(
+        collection(db, "users"),
+        where("email", "==", userInfo.email)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        setValue("user", {
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+    }
+    fetchUserData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userInfo.email]);
+  useEffect(() => {
     document.title = "Add Post";
-  },[])
+  }, []);
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "categories");
@@ -100,8 +120,13 @@ const PostAddNew = () => {
     }
     getData();
   }, []);
-  const handleClickOption = (item) => {
-    setValue("categoryID", item.id);
+  const handleClickOption = async (item) => {
+    const colRef = doc(db, "categories", item.id);
+    const docData = await getDoc(colRef);
+    setValue("category", {
+      id: docData.id,
+      ...docData.data(),
+    });
     setSelectCategory(item);
   };
   return (
@@ -199,7 +224,12 @@ const PostAddNew = () => {
             </div>
           </Field>
         </div>
-        <Button type="submit" className="mx-auto w-[250px]" isLoading={loading} disabled={loading}>
+        <Button
+          type="submit"
+          className="mx-auto w-[250px]"
+          isLoading={loading}
+          disabled={loading}
+        >
           Add new post
         </Button>
       </form>

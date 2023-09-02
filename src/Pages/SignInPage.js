@@ -1,18 +1,19 @@
-import { useAuth } from "Contexts/Auth-context";
 import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { NavLink, useNavigate } from "react-router-dom";
 import AuthenticationPage from "./AuthenticationPage";
-import { useForm } from "react-hook-form";
-import { Field } from "Components/Field";
-import { Label } from "Components/label";
-import Input from "Components/input/input";
-import { Button } from "Components/Button";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { toast } from "react-toastify";
+import { useAuth } from "Contexts/Auth-context";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "FirebaseApp/Firebase-config";
+import { Field } from "Components/Field";
+import { Label } from "Components/label";
+import Input from "Components/input/input";
 import InputPasswordToggle from "Components/input/InputPasswordToggle";
+import { Button } from "Components/Button";
+
 const schema = yup.object({
   email: yup
     .string()
@@ -20,11 +21,7 @@ const schema = yup.object({
     .required("Please enter your email address"),
   password: yup
     .string()
-    .min(8, "Your password must be at least 8 character or greater")
-    .matches(
-      /^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      "The password must contain at least one capital letter and one special character"
-    )
+    .min(8, "Your password must be at least 8 characters or greater")
     .required("Please enter your password"),
 });
 const SignInPage = () => {
@@ -37,9 +34,9 @@ const SignInPage = () => {
     resolver: yupResolver(schema),
   });
   useEffect(() => {
-    const arrErrors = Object.values(errors);
-    if (arrErrors.length > 0) {
-      toast.error(arrErrors[0]?.message, {
+    const arrErroes = Object.values(errors);
+    if (arrErroes.length > 0) {
+      toast.error(arrErroes[0]?.message, {
         pauseOnHover: false,
         delay: 0,
       });
@@ -55,11 +52,9 @@ const SignInPage = () => {
   const handleSignIn = async (values) => {
     if (!isValid) return;
     await signInWithEmailAndPassword(auth, values.email, values.password);
-    toast.success("Login successfully !!!");
-    setTimeout(() => {
-      navigate("/");
-    });
+    navigate("/");
   };
+
   return (
     <AuthenticationPage>
       <form
@@ -68,11 +63,11 @@ const SignInPage = () => {
         autoComplete="off"
       >
         <Field>
-          <Label htmlFor="email">Email Address</Label>
+          <Label htmlFor="email">Email address</Label>
           <Input
-            type="text"
+            type="email"
             name="email"
-            placeholder="Enter Your Email Address"
+            placeholder="Enter your email address"
             control={control}
           ></Input>
         </Field>
@@ -81,16 +76,20 @@ const SignInPage = () => {
           <InputPasswordToggle control={control}></InputPasswordToggle>
         </Field>
         <div className="have-account">
-            No Account ?{" "}
-            <NavLink to={"/sign-up"}>Register</NavLink>
-          </div>
+          You have not had an account?{" "}
+          <NavLink to={"/sign-up"}>Register an account</NavLink>{" "}
+        </div>
         <Button
           type="submit"
-          className="w-full max-w-[300px] mx-auto"
+          style={{
+            width: "100%",
+            maxWidth: 300,
+            margin: "0 auto",
+          }}
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          Sign in
+          Sign Up
         </Button>
       </form>
     </AuthenticationPage>

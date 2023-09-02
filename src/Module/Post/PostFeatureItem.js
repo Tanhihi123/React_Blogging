@@ -52,35 +52,36 @@ const PostFeatureItemStyles = styled.div`
   }
 `;
 const PostFeatureItem = ({ data }) => {
-  const [category, setCategories] = useState("");
-  const [user, setUser] = useState();
-  useEffect(() => {
-    async function fetchCategory() {
-      if (data.categoryID) {
-        const docRef = doc(db, "categories", data.categoryID);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.data()) {
-          setCategories(docSnap.data());
-        }
-      }
-    }
-    fetchCategory();
-  }, [data.categoryID]);
-  useEffect(() => {
-    async function fetchUser() {
-      if (data.userId) {
-        const docRef = doc(db, "users", data.userId);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.data()) {
-          setUser(docSnap.data());
-        }
-      }
-    }
-    fetchUser();
-  }, [data.userId]);
+  // const [category, setCategories] = useState("");
+  // const [user, setUser] = useState();
+  // useEffect(() => {
+  //   async function fetchCategory() {
+  //     if (data.categoryID) {
+  //       const docRef = doc(db, "categories", data.categoryID);
+  //       const docSnap = await getDoc(docRef);
+  //       if (docSnap.data()) {
+  //         setCategories(docSnap.data());
+  //       }
+  //     }
+  //   }
+  //   fetchCategory();
+  // }, [data.categoryID]);
+  // useEffect(() => {
+  //   async function fetchUser() {
+  //     if (data.userId) {
+  //       const docRef = doc(db, "users", data.userId);
+  //       const docSnap = await getDoc(docRef);
+  //       if (docSnap.data()) {
+  //         setUser(docSnap.data());
+  //       }
+  //     }
+  //   }
+  //   fetchUser();
+  // }, [data.userId]);
   if (!data || !data.id) return null;
   const date =data?.createdAt?.seconds ? new Date(data?.createdAt?.seconds*1000) : new Date();
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
+  const {category, user} = data;
   return (
     <PostFeatureItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>

@@ -53,7 +53,7 @@ const HomeBanner = () => {
               inventore nulla beatae numquam. Minus quam consequatur nobis
               consectetur!
             </p>
-            <Button onClick={() => navigate("/sign-up")} kind="secondary">Get started</Button>
+            <Button onClick={() => navigate("/sign-in")} kind="secondary">Get started</Button>
           </div>
           <div className="banner-image">
             <img src="/Tansama.png" alt="" className="banner-img" />
