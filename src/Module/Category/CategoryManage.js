@@ -35,7 +35,7 @@ const CategoryManage = () => {
   const handleLoadMoreCategory = async () => {
     const nextRef = query(
       collection(db, "categories"),
-      startAfter(lastDoc),
+      startAfter(lastDoc || 0),
       limit(CATEGORY_PER_PAGE)
     );
     onSnapshot(nextRef, (snapshot) => {
