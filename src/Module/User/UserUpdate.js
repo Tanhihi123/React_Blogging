@@ -2,6 +2,7 @@ import { Button } from "Components/Button";
 import { Radio } from "Components/Checkbox";
 import { Field, FieldCheckboxes } from "Components/Field";
 import ImageUpload from "Components/Image/ImageUpload";
+import { Textarea } from "Components/Textarea";
 import Input from "Components/input/input";
 import { Label } from "Components/label";
 import { db } from "FirebaseApp/Firebase-config";
@@ -180,6 +181,12 @@ const UserUpdate = () => {
                 User
               </Radio>
             </FieldCheckboxes>
+          </Field>
+        </div>
+        <div className="form-layout">
+          <Field>
+              <Label>Description</Label>
+              <Textarea name="description" control={control}></Textarea>
           </Field>
         </div>
         <Button
