@@ -1,19 +1,19 @@
-import Heading from "Components/Layout/Heading";
 import Layout from "Components/Layout/Layout";
 import PostCategory from "Module/Post/PostCategory";
 import PostImage from "Module/Post/PostImage";
-import PostItem from "Module/Post/PostItem";
 import PostMeta from "Module/Post/PostMeta";
 import React from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import PageNotFound from "./NotFoundPage";
 import { useEffect } from "react";
-import { collection, doc, onSnapshot, query, where } from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "FirebaseApp/Firebase-config";
 import { useState } from "react";
 import parse from "html-react-parser";
 import AuthorBox from "Components/Author/AuthorBox";
+import PostRelated from "Module/Post/PostRelated";
+import slugify from "slugify";
 
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
@@ -116,9 +116,16 @@ const PostDetailsPage = () => {
     }
     fetchData();
   });
-  if (!slug || !postInfo.title) return <PageNotFound></PageNotFound>;
-  if (!postInfo.title) return null;
+  useEffect(() => {
+    document.body.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [slug]);
   const { user } = postInfo;
+  const date = user?.createdAt?.seconds
+    ? new Date(user?.createdAt?.seconds * 1000)
+    : new Date();
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
+  if (!slug) return <PageNotFound></PageNotFound>;
+  if (!postInfo.title) return null;
   return (
     <PostDetailsPageStyles>
       <Layout>
@@ -129,26 +136,22 @@ const PostDetailsPage = () => {
               className="post-feature"
             ></PostImage>
             <div className="post-info">
-              <PostCategory className="mb-6">
+              <PostCategory className="mb-6" to={postInfo.category?.slug}>
                 {postInfo.category?.name}
               </PostCategory>
               <h1 className="post-heading">{postInfo.title}</h1>
-              <PostMeta></PostMeta>
+              <PostMeta
+                to={slugify(user?.fullname || "", { lower: true })}
+                authorName={user?.fullname}
+                date={formatDate}
+              ></PostMeta>
             </div>
           </div>
           <div className="post-content">
             <div className="entry-content">{parse(postInfo.content || "")}</div>
             <AuthorBox userId={user.id}></AuthorBox>
           </div>
-          <div className="post-related">
-            <Heading>Bài viết liên quan</Heading>
-            <div className="grid-layout grid-layout--primary">
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-              <PostItem></PostItem>
-            </div>
-          </div>
+          <PostRelated categoryId={postInfo?.categoryId}></PostRelated>
         </div>
       </Layout>
     </PostDetailsPageStyles>

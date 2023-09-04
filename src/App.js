@@ -17,6 +17,7 @@ import UserProfile from "Module/User/UserProfile";
 import CategoryUpdate from "Module/Category/CategoryUpdate";
 import UserUpdate from "Module/User/UserUpdate";
 import PostUpdate from "Module/Post/PostUpdate";
+import CategoryPage from "Pages/CategoryPage";
 
 function App() {
   return (
@@ -27,6 +28,10 @@ function App() {
           <Route path="/sign-up" element={<SignUpPage></SignUpPage>}></Route>
           <Route path="/sign-in" element={<SignInPage></SignInPage>}></Route>
           <Route path="*" element={<NotFoundPage></NotFoundPage>}></Route>
+          <Route
+            path="/category/:slug"
+            element={<CategoryPage></CategoryPage>}
+          ></Route>
           <Route
             path="/:slug"
             element={<PostDetailsPage></PostDetailsPage>}

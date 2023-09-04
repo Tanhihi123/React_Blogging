@@ -1,10 +1,10 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled, { css } from "styled-components";
 const PostTittleStyles = styled.h3`
   font-weight: 600;
   line-height: 1.5;
-  a{
+  a {
     display: block;
   }
   ${(props) =>
@@ -21,7 +21,8 @@ const PostTittleStyles = styled.h3`
 const PostTitle = ({ children, className = "", size = "normal", to = "/" }) => {
   return (
     <PostTittleStyles size={size} className={`post-title ${className}`}>
-      <NavLink to={to}>{children}</NavLink>
+      <Link to={`/${to}`}>{children}</Link>
+      {/* Cái này xài Link chứ k xài NavLink */}
     </PostTittleStyles>
   );
 };

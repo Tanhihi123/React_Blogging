@@ -79,9 +79,11 @@ const PostFeatureItem = ({ data }) => {
   //   fetchUser();
   // }, [data.userId]);
   if (!data || !data.id) return null;
-  const date =data?.createdAt?.seconds ? new Date(data?.createdAt?.seconds*1000) : new Date();
+  const date = data?.createdAt?.seconds
+    ? new Date(data?.createdAt?.seconds * 1000)
+    : new Date();
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
-  const {category, user} = data;
+  const { category, user } = data;
   return (
     <PostFeatureItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>
@@ -92,7 +94,7 @@ const PostFeatureItem = ({ data }) => {
             <PostCategory to={category.slug}>{category.name}</PostCategory>
           )}
           <PostMeta
-            to={slugify(user?.fullname || "", { lower: true })}
+            to={slugify(user?.username || "", { lower: true })}
             authorName={user?.fullname}
             date={formatDate}
           ></PostMeta>
