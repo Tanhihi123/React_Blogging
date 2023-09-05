@@ -1,3 +1,4 @@
+import Avatar from "Components/Avatar/Avatar";
 import { Button } from "Components/Button";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,18 +10,14 @@ const HomeBannerStyles = styled.div`
   margin-bottom: 60px;
   .banner {
     position: absolute;
-    top: 0;
+    top: 200px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 75%;
     &-content {
       max-width: 400px;
       color: white;
-    }
-    &-image {
-      width: 500px;
-      height: 800px;
-      transform: translateX(65%) translateY(18%);
     }
     &-heading {
       font-size: 36px;
@@ -30,16 +27,11 @@ const HomeBannerStyles = styled.div`
       line-height: 1.75;
       margin-bottom: 40px;
     }
-    &-img {
-      width: 500px;
-      height: 500px;
-      object-fit: contain;
-    }
   }
 `;
 
 const HomeBanner = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
     <HomeBannerStyles>
       <div className="container">
@@ -47,17 +39,15 @@ const HomeBanner = () => {
           <div className="banner-content">
             <h1 className="banner-heading">Blogging by Tan</h1>
             <p className="banner-desc">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Temporibus, laboriosam. Perspiciatis, et voluptatum! Rerum
-              incidunt recusandae quos officia ratione fuga necessitatibus,
-              inventore nulla beatae numquam. Minus quam consequatur nobis
-              consectetur!
+              Xin tự giới thiệu , mình là một front-end developer trẻ tuổi ,
+              cũng là một trader crypto , hy vọng các bạn sẽ có một trải nghiệm
+              tốt nhất !! Thanks a lot , peace .......
             </p>
-            <Button onClick={() => navigate("/sign-in")} kind="secondary">Get started</Button>
+            <Button onClick={() => navigate("/sign-in")} kind="secondary">
+              Get started
+            </Button>
           </div>
-          <div className="banner-image">
-            <img src="/Tansama.png" alt="" className="banner-img" />
-          </div>
+          <Avatar></Avatar>
         </div>
       </div>
     </HomeBannerStyles>

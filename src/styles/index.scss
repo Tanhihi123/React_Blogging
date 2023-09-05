@@ -134,3 +134,14 @@ input:-webkit-autofill:active {
     z-index: 10;
   }
 }
+.triangle-down {
+  position: absolute;
+  bottom : 0;
+  right: 50%;
+  transform: translateX(50%) translateY(100%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 12px solid #A4D96C;
+}

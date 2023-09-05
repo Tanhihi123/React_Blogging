@@ -18,7 +18,6 @@ import CategoryUpdate from "Module/Category/CategoryUpdate";
 import UserUpdate from "Module/User/UserUpdate";
 import PostUpdate from "Module/Post/PostUpdate";
 import CategoryPage from "Pages/CategoryPage";
-
 function App() {
   return (
     <div>

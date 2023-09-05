@@ -4,7 +4,7 @@ import { Dropdown } from "Components/Dropdown";
 import { Field } from "Components/Field";
 import Input from "Components/input/input";
 import { Label } from "Components/label";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import slugify from "slugify";
 import styled from "styled-components";
@@ -29,6 +29,7 @@ import DashboardHeading from "Module/Dashboard/DashboardHeading";
 import ReactQuill, { Quill } from "react-quill";
 import ImageUploader from "quill-image-uploader";
 import "quill-image-uploader/dist/quill.imageUploader.min.css";
+import axios from "axios";
 Quill.register("modules/ImageUploader", ImageUploader);
 const PostAddNewStyles = styled.div``;
 const PostAddNew = () => {
@@ -42,6 +43,7 @@ const PostAddNew = () => {
       hot: false,
       category: {},
       user:{},
+      content : "",
     },
   });
   const watchStatus = watch("status");
@@ -56,6 +58,7 @@ const PostAddNew = () => {
   } = useFirebaseImg(setValue, getValues);
   const [categories, setCategories] = useState([]);
   const [selectcategory, setSelectCategory] = useState({});
+  const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const addPostHandler = async (values) => {
     setLoading(true);
@@ -70,6 +73,7 @@ const PostAddNew = () => {
         userId : cloneValues.user.id,
         image,
         createdAt : serverTimestamp(),
+        content : content,
       });
       toast.success("Create new post successfully");
       reset({
@@ -79,6 +83,7 @@ const PostAddNew = () => {
         hot: false,
         category : {},
         user : {},
+        content : "",
       });
       setImage("");
       setProgress(0);
@@ -135,6 +140,34 @@ const PostAddNew = () => {
     });
     setSelectCategory(item);
   };
+  const modules = useMemo(
+    () => ({
+      toolbar: [
+        ["bold", "italic", "underline", "strike"],
+        ["blockquote"],
+        [{ header: 1 }, { header: 2 }], // custom button values
+        [{ list: "ordered" }, { list: "bullet" }],
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        ["link", "image"],
+      ],
+      ImageUploader: {
+        upload: async (file) => {
+          const bodyFormData = new FormData();
+          bodyFormData.append("image", file);
+          const response = await axios({
+            method: "post",
+            url: "https://api.imgbb.com/1/upload?key=1354c230dd40a7043dbe4307c3df1bc3",
+            data: bodyFormData,
+            headers: {
+              "content-Type": "multipart/form-data",
+            },
+          });
+          return response.data.data.url;
+        },
+      },
+    }),
+    []
+  );
   return (
     <PostAddNewStyles>
       <DashboardHeading title="Add post" desc="Add new post"></DashboardHeading>
