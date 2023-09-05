@@ -2,8 +2,16 @@ import DashboardHeading from "Module/Dashboard/DashboardHeading";
 import React from "react";
 import UserTable from "./UserTable";
 import { Button } from "Components/Button";
+import { useAuth } from "Contexts/Auth-context";
+import { userRole } from "utils/constants";
+import { useEffect } from "react";
 
 const UserManage = () => {
+  useEffect(()=> {
+    document.title = "Users Manage"
+  },[])
+  const {userInfo} = useAuth();
+  if(+userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
       <DashboardHeading

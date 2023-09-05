@@ -10,18 +10,24 @@ import { toast } from "react-toastify";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "FirebaseApp/Firebase-config";
 import { NavLink, useNavigate } from "react-router-dom";
-import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import AuthenticationPage from "./AuthenticationPage";
 import InputPasswordToggle from "Components/input/InputPasswordToggle";
 import slugify from "slugify";
 import { userRole, userStatus } from "utils/constants";
 const schema = yup.object({
   fullname: yup.string().required("Please enter your fullname"),
-  Email: yup
+  email: yup
     .string()
     .email("Please enter valid email address")
     .required("Please enter your email address"),
-  Password: yup
+  password: yup
     .string()
     .min(8, "Your password must be at least 8 character or greater")
     .matches(
@@ -43,13 +49,12 @@ const SignUpPage = () => {
     resolver: yupResolver(schema),
   });
   const handleSignUp = async (values) => {
-    // console.log(values);
     if (!isValid) return;
     const user = await createUserWithEmailAndPassword(
       auth,
-      values.Email,
-      values.Password
-    );
+      values.email,
+      values.password
+    ); 
     await updateProfile(auth.currentUser, {
       displayName: values.fullname,
       photoURL:
@@ -57,14 +62,14 @@ const SignUpPage = () => {
     });
     await setDoc(doc(db, "users", auth.currentUser.uid), {
       fullname: values.fullname,
-      email: values.Email,
-      password: values.Password,
+      email: values.email,
+      password: values.password,
       username: slugify(values.fullname, { lower: true }),
       avatar:
         "https://img2.thuthuatphanmem.vn/uploads/2018/12/25/anh-gai-xinh-am-ap_012858881.jpg",
-      status : userStatus.ACTIVE,
-      role : userRole.USER,
-      createdAt : serverTimestamp(),
+      status: userStatus.ACTIVE,
+      role: userRole.USER,
+      createdAt: serverTimestamp(),
     });
     toast.success("Register successfully !!!");
     navigate("/");
@@ -103,7 +108,7 @@ const SignUpPage = () => {
               Email Address
             </Label>
             <Input
-              name="Email"
+              name="email"
               type="email"
               placeholder="Enter Your Email Address"
               control={control}

@@ -33,15 +33,6 @@ const SignInPage = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
-  useEffect(() => {
-    const arrErroes = Object.values(errors);
-    if (arrErroes.length > 0) {
-      toast.error(arrErroes[0]?.message, {
-        pauseOnHover: false,
-        delay: 0,
-      });
-    }
-  }, [errors]);
   const { userInfo } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
@@ -51,16 +42,32 @@ const SignInPage = () => {
   }, [userInfo]);
   const handleSignIn = async (values) => {
     if (!isValid) return;
-    await signInWithEmailAndPassword(auth, values.email, values.password);
-    navigate("/");
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      navigate("/");
+      toast.success("Login successfully!!!");
+    } catch (error) {
+      if (error.message.includes("wrong-password")){
+        toast.error("It seems your password was wrong");
+      }else toast.error(error.message);
+      
+    }
   };
-
+  
+  useEffect(() => {
+    const arrErroes = Object.values(errors);
+    if (arrErroes.length > 0) {
+      toast.error(arrErroes[0]?.message, {
+        pauseOnHover: false,
+        delay: 0,
+      });
+    }
+  }, [errors]);
   return (
     <AuthenticationPage>
       <form
         className="form"
         onSubmit={handleSubmit(handleSignIn)}
-        autoComplete="off"
       >
         <Field>
           <Label htmlFor="email">Email address</Label>
@@ -81,15 +88,11 @@ const SignInPage = () => {
         </div>
         <Button
           type="submit"
-          style={{
-            width: "100%",
-            maxWidth: 300,
-            margin: "0 auto",
-          }}
+          className="w-full max-w-[300px] mx-auto"
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          Sign Up
+          Login
         </Button>
       </form>
     </AuthenticationPage>

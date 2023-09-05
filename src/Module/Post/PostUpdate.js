@@ -30,9 +30,6 @@ import ImageUploader from "quill-image-uploader";
 import "quill-image-uploader/dist/quill.imageUploader.min.css";
 import ReactQuill, { Quill } from "react-quill";
 import axios from "axios";
-// if (!Quill.imports["modules/ImageUploader"]) {
-//   Quill.register("modules/ImageUploader", ImageUploader);
-// }
 Quill.register("modules/ImageUploader", ImageUploader);
 const PostUpdate = () => {
   const [params] = useSearchParams();

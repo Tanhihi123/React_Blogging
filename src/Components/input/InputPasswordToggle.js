@@ -8,7 +8,7 @@ const InputPasswordToggle = ({control}) => {
     return (
         <Fragment>
             <Input
-              name="Password"
+              name="password"
               type={togglePassword ? "text" : "password"}
               placeholder="Enter Your Password"
               control={control}

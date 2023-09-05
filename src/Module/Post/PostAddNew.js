@@ -26,7 +26,10 @@ import { db } from "FirebaseApp/Firebase-config";
 import { useAuth } from "Contexts/Auth-context";
 import { toast } from "react-toastify";
 import DashboardHeading from "Module/Dashboard/DashboardHeading";
-
+import ReactQuill, { Quill } from "react-quill";
+import ImageUploader from "quill-image-uploader";
+import "quill-image-uploader/dist/quill.imageUploader.min.css";
+Quill.register("modules/ImageUploader", ImageUploader);
 const PostAddNewStyles = styled.div``;
 const PostAddNew = () => {
   const { userInfo } = useAuth();
@@ -187,6 +190,19 @@ const PostAddNew = () => {
                 {selectcategory?.name}
               </span>
             )}
+          </Field>
+        </div>
+        <div className="mb-10">
+          <Field>
+            <Label>Content</Label>
+            <div className="w-full entry-content">
+              <ReactQuill
+                modules={modules}
+                theme="snow"
+                value={content}
+                onChange={setContent}
+              />
+            </div>
           </Field>
         </div>
         <div className="grid grid-cols-2 gap-x-10 mb-10">

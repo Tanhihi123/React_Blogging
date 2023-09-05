@@ -3,6 +3,7 @@ import { Button } from "Components/Button";
 import { Pagination } from "Components/Pagination";
 import { Table } from "Components/Table";
 import { LabelStatus } from "Components/label";
+import { useAuth } from "Contexts/Auth-context";
 import { db } from "FirebaseApp/Firebase-config";
 import DashboardHeading from "Module/Dashboard/DashboardHeading";
 import {
@@ -20,7 +21,7 @@ import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { postStatus } from "utils/constants";
+import { postStatus, userRole } from "utils/constants";
 
 const POST_PER_PAGE = 5;
 const PostManage = () => {
@@ -112,6 +113,8 @@ const PostManage = () => {
       documentSnapshots.docs[documentSnapshots.docs.length - 1];
     setLastDoc(lastVisible);
   };
+  const {userInfo} = useAuth();
+  if(+userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
       <div className="mb-10 flex justify-between">
