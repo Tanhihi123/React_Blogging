@@ -1,8 +1,7 @@
 import { Button } from "Components/Button";
 import { useAuth } from "Contexts/Auth-context";
-import { constant } from "lodash";
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 const HeaderStyles = styled.header`
@@ -76,9 +75,7 @@ function getLastName(name) {
   return name.split(" ")[length - 1];
 }
 const Header = () => {
-  const navigate = useNavigate();
   const { userInfo } = useAuth();
-  // console.log(userInfo);
   return (
     <HeaderStyles>
       <div className="container">
@@ -88,7 +85,7 @@ const Header = () => {
           </NavLink>
           <ul className="menu">
             {menuLinks.map((item) => (
-              <li className="menu-item" key={item.title}>
+              <li className="menu-item hover:-translate-y-1 font-bold" key={item.title}>
                 <NavLink to={item.url} className="menu-link">
                   {item.title}
                 </NavLink>
