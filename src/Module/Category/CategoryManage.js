@@ -2,6 +2,7 @@ import { ActionDelete, ActionEdit, ActionView } from "Components/Action";
 import { Button } from "Components/Button";
 import { Table } from "Components/Table";
 import { LabelStatus } from "Components/label";
+import { useAuth } from "Contexts/Auth-context";
 import { db } from "FirebaseApp/Firebase-config";
 import DashboardHeading from "Module/Dashboard/DashboardHeading";
 import {
@@ -18,15 +19,17 @@ import {
 import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import slugify from "slugify";
 import Swal from "sweetalert2";
-import { categoryStatus } from "utils/constants";
+import { categoryStatus, userRole } from "utils/constants";
 
 const CATEGORY_PER_PAGE = 2;
 const CategoryManage = () => {
   const [categories, setCategories] = useState([]);
   const [lastDoc, setLastDoc] = useState();
   const [total, setTotal] = useState(0);
+  const { userInfo } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
     document.title = "Category Manage";
@@ -85,6 +88,7 @@ const CategoryManage = () => {
     fetchData();
   }, [filter]);
   const handleDeleteCategory = (docId) => {
+    console.log("hihi");
     const colRef = doc(db, "categories", docId);
     Swal.fire({
       title: "Are you sure?",
@@ -104,6 +108,7 @@ const CategoryManage = () => {
   const handleInputFilter = debounce((e) => {
     setFilter(e.target.value);
   }, 500);
+
   return (
     <div>
       <DashboardHeading title="Categories" desc="Manage your category">
@@ -126,7 +131,7 @@ const CategoryManage = () => {
             <th>Name</th>
             <th>Slug</th>
             <th>Status</th>
-            <th>Action</th>
+            {+userInfo.role === userRole.ADMIN && <th>Action</th>}
           </tr>
         </thead>
         <tbody>
@@ -146,19 +151,22 @@ const CategoryManage = () => {
                     <LabelStatus type="warning">Unapproved</LabelStatus>
                   )}
                 </td>
-                <td>
-                  <div className="flex gap-5 text-gray-400">
-                    <ActionView></ActionView>
-                    <ActionEdit
-                      onClick={() =>
-                        navigate(`/manage/update-category?id=${category.id}`)
-                      }
-                    ></ActionEdit>
-                    <ActionDelete
-                      onClick={() => handleDeleteCategory(category.id)}
-                    ></ActionDelete>
-                  </div>
-                </td>
+                {+userInfo.role === userRole.ADMIN && (
+                  <td>
+                    <div className="flex gap-5 text-gray-400">
+                      <ActionView></ActionView>
+                      {}
+                      <ActionEdit
+                        onClick={() =>
+                          navigate(`/manage/update-category?id=${category.id}`)
+                        }
+                      ></ActionEdit>
+                      <ActionDelete
+                        onClick={() => handleDeleteCategory(category.id)}
+                      ></ActionDelete>
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
         </tbody>

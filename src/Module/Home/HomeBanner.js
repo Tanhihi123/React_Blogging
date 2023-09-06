@@ -28,6 +28,13 @@ const HomeBannerStyles = styled.div`
       margin-bottom: 40px;
     }
   }
+  @media screen and (max-width : 768px) {
+    .banner {
+      &-avatar {
+        display: none;
+      }
+    }
+  }
 `;
 
 const HomeBanner = () => {
@@ -47,7 +54,9 @@ const HomeBanner = () => {
               Get started
             </Button>
           </div>
-          <Avatar></Avatar>
+          <div className="banner-avatar">
+            <Avatar></Avatar>
+          </div>
         </div>
       </div>
     </HomeBannerStyles>

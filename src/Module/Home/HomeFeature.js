@@ -56,8 +56,22 @@ const HomeFeature = () => {
           >
             <Swiper
               grabCursor={"true"}
-              spaceBetween={30}
-              slidesPerView={3}
+              // spaceBetween={30}
+              // slidesPerView={3}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                  spaceBetween: 30,
+                },
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 30,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 30,
+                },
+              }}
               className="swiper-slide"
             >
               {posts.map((post) => (

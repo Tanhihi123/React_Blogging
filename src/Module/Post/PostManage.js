@@ -20,6 +20,7 @@ import {
 import { debounce } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { postStatus, userRole } from "utils/constants";
 
@@ -113,12 +114,21 @@ const PostManage = () => {
       documentSnapshots.docs[documentSnapshots.docs.length - 1];
     setLastDoc(lastVisible);
   };
-  const {userInfo} = useAuth();
-  if(+userInfo.role !== userRole.ADMIN) return null;
+  const { userInfo } = useAuth();
   return (
     <div>
       <div className="mb-10 flex justify-between">
-      <DashboardHeading title="Manage Post" desc="Manage List Post"></DashboardHeading>
+        {+userInfo.role === userRole.ADMIN ? 
+        <DashboardHeading
+          title="Manage Post"
+          desc="Manage List Post"
+        ></DashboardHeading>
+        :
+        <DashboardHeading
+          title="Chỉ ADMIN mới có quyền truy cập"
+        ></DashboardHeading>
+        }
+        {+userInfo.role === userRole.ADMIN &&
         <div className="w-full max-w-[300px]">
           <input
             type="text"
@@ -127,7 +137,10 @@ const PostManage = () => {
             onChange={handleSearchPost}
           />
         </div>
+        }
       </div>
+      {+userInfo.role === userRole.ADMIN && 
+      
       <Table>
         <thead>
           <tr>
@@ -178,7 +191,11 @@ const PostManage = () => {
                       <ActionView
                         onClick={() => navigate(`/${post.slug}`)}
                       ></ActionView>
-                      <ActionEdit onClick={() => navigate(`/manage/update-post?id=${post.id}`)}></ActionEdit>
+                      <ActionEdit
+                        onClick={() =>
+                          navigate(`/manage/update-post?id=${post.id}`)
+                        }
+                      ></ActionEdit>
                       <ActionDelete
                         onClick={() => handleDeletePost(post.id)}
                       ></ActionDelete>
@@ -189,7 +206,8 @@ const PostManage = () => {
             })}
         </tbody>
       </Table>
-      {total > postList.length && (
+      }
+      {total > postList.length && +userInfo.role === userRole.ADMIN && (
         <div className="mt-10 text-center">
           {/* <Pagination></Pagination> */}
           <Button className="mx-auto w-[200px]" onClick={handleLoadMorePost}>
