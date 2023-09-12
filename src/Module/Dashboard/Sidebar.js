@@ -146,12 +146,13 @@ const Sidebar = () => {
         <span>Blogging</span>
       </div>
       {sidebarLinks.map((link) => {
-        if(link.onClick) return (
-          <div className="menu-item" onClick={link.onClick} key={link.title}>
-            <span className="menu-icon">{link.icon}</span>
-            <span className="menu-text">{link.title}</span>
-          </div>
-        )
+        if (link.onClick)
+          return (
+            <div className="menu-item" onClick={link.onClick} key={link.title}>
+              <span className="menu-icon">{link.icon}</span>
+              <span className="menu-text">{link.title}</span>
+            </div>
+          );
         return (
           <NavLink to={link.url} className="menu-item" key={link.title}>
             <span className="menu-icon">{link.icon}</span>

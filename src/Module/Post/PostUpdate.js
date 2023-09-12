@@ -24,10 +24,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { postStatus } from "utils/constants";
-import "react-quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 import ImageUploader from "quill-image-uploader";
 import "quill-image-uploader/dist/quill.imageUploader.min.css";
+import "react-quill/dist/quill.snow.css";
 import ReactQuill, { Quill } from "react-quill";
 import axios from "axios";
 Quill.register("modules/ImageUploader", ImageUploader);
@@ -109,7 +109,7 @@ const PostUpdate = () => {
   const modules = useMemo(
     () => ({
       toolbar: [
-        ["bold", "italic", "underline", "strike"],
+        ["bold", "italic", "underline", "<strike></strike>"],
         ["blockquote"],
         [{ header: 1 }, { header: 2 }], // custom button values
         [{ list: "ordered" }, { list: "bullet" }],
@@ -127,7 +127,7 @@ const PostUpdate = () => {
             headers: {
               "content-Type": "multipart/form-data",
             },
-          });
+          }); 
           return response.data.data.url;
         },
       },
