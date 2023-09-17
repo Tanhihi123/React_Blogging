@@ -5,6 +5,7 @@ import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import PostItem from "./PostItem";
+import { Swiper, SwiperSlide } from "swiper/react";
 
 const PostRelated = ({ categoryId = "" }) => {
   const [posts, setPosts] = useState([]);
@@ -28,11 +29,41 @@ const PostRelated = ({ categoryId = "" }) => {
   return (
     <div className="post-related">
       <Heading>Bài viết liên quan</Heading>
-      <div className="grid-layout grid-layout--primary">
-        {posts.map((item) => (
-          <PostItem key={item.id} data={item}></PostItem>
-        ))}
-      </div>
+      {/* <div className="grid-layout grid-layout--primary"> */}
+        {/* {posts.map((item) => ( */}
+          {/* <PostItem key={item.id} data={item}></PostItem> */}
+          <div
+            className={`swiper-layout`}
+          >
+            <Swiper
+              grabCursor={"true"}
+              // spaceBetween={30}
+              // slidesPerView={3}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                  spaceBetween: 30,
+                },
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 30,
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 30,
+                },
+              }}
+              className="swiper-slide"
+            >
+              {posts.map((post) => (
+                <SwiperSlide key={post.id}>
+                  <PostItem data={post}></PostItem>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        {/* ))} */}
+      {/* </div> */}
     </div>
   );
 };

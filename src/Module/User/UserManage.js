@@ -7,30 +7,28 @@ import { userRole } from "utils/constants";
 import { useEffect } from "react";
 
 const UserManage = () => {
-  useEffect(()=> {
-    document.title = "Users Manage"
-  },[])
-  const {userInfo} = useAuth();
+  useEffect(() => {
+    document.title = "Users Manage";
+  }, []);
+  const { userInfo } = useAuth();
   return (
     <div>
-      {+userInfo.role === userRole.ADMIN ?
-      <DashboardHeading
-        title="Users"
-        desc="Manage your user"
-      ></DashboardHeading>
-      :
-      <DashboardHeading
-          title="Chỉ ADMIN mới có quyền truy cập"
+      {+userInfo.role === userRole.ADMIN ? (
+        <DashboardHeading
+          title="Users"
+          desc="Manage your user"
         ></DashboardHeading>
-      }
-      {+userInfo.role === userRole.ADMIN &&
-      <div className="flex justify-end mb-10">
-      <Button kind="ghost" to="/manage/add-user">Add new user</Button>
-      </div>
-      }
-      {+userInfo.role === userRole.ADMIN && 
-      <UserTable></UserTable>
-      }
+      ) : (
+        <DashboardHeading title="Chỉ ADMIN mới có quyền truy cập"></DashboardHeading>
+      )}
+      {+userInfo.role === userRole.ADMIN && (
+        <div className="flex justify-end mb-10">
+          <Button kind="ghost" to="/manage/add-user">
+            Add new user
+          </Button>
+        </div>
+      )}
+      {+userInfo.role === userRole.ADMIN && <UserTable></UserTable>}
     </div>
   );
 };

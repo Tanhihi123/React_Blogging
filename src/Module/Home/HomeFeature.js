@@ -80,14 +80,14 @@ const HomeFeature = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-            {show && (
+            {/* {show && (
               <div className="relative w-40 h-14 rounded-lg bg-[#A4D96C] p-2 -translate-y-[360px] translate-x-[500px]">
                 <span className="absolute top-4 inline-flex font-bold animate-text-gradient bg-gradient-to-r from-[rgb(123,197,231)] via-[#8678f9] to-[#06e2f2] bg-[200%_auto] bg-clip-text text-xl text-transparent ">
                   <p>Kéo qua phải</p>
                 </span>
                 <div className="triangle-down"></div>
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </HomeFeatureStyles>

@@ -4,6 +4,7 @@ import { Field, FieldCheckboxes } from "Components/Field";
 import ImageUpload from "Components/Image/ImageUpload";
 import Input from "Components/input/input";
 import { Label } from "Components/label";
+import { useAuth } from "Contexts/Auth-context";
 import { auth, db } from "FirebaseApp/Firebase-config";
 import useFirebaseImg from "Hooks/UseFirebaseImg";
 import DashboardHeading from "Module/Dashboard/DashboardHeading";
@@ -14,7 +15,7 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import slugify from "slugify";
