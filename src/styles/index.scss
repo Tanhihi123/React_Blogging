@@ -135,7 +135,7 @@ input:-webkit-autofill:active {
   }
   .ql-container.ql-snow,
   .ql-editor {
-    @apply border-none font-[#1DC071] text-base;
+    @apply border-none text-base;
   }
   .ql-editor {
     @apply pt-10;
@@ -145,7 +145,6 @@ input:-webkit-autofill:active {
     @apply text-sm not-italic text-[#B2B3BD];
   }
 }
-
 .triangle-down {
   position: absolute;
   bottom: 0;
