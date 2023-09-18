@@ -76,11 +76,12 @@ const SignInPage = () => {
             name="email"
             placeholder="Enter your email address"
             control={control}
+            value="tanlapro002@gmail.com"
           ></Input>
         </Field>
         <Field>
           <Label htmlFor="password">Password</Label>
-          <InputPasswordToggle control={control}></InputPasswordToggle>
+          <InputPasswordToggle control={control} value="Tan538431$"></InputPasswordToggle>
         </Field>
         <div className="have-account">
           You have not had an account?{" "}
