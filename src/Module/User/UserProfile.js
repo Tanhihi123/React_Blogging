@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { userRole } from "utils/constants";
-import Modal from "react-modal";
+import ReactModal from "react-modal";
 
 const UserProfile = () => {
   const { control } = useForm({
@@ -31,14 +31,14 @@ const UserProfile = () => {
   const { userInfo } = useAuth();
   return (
     <>
-      <Modal
+      <ReactModal
         isOpen={openModal}
         className="w-full max-w-[521px] bg-white rounded-3xl outline-none relative max-h-[90vh] overflow-hidden select-none transition-all duration-300"
         overlayClassName=" fixed inset-0 bg-black bg-opacity-40 z-50 flex items-center justify-center"
         onRequestClose={() => setOpenModal(false)}
       >
         <img src={userInfo?.avatar} alt="" />
-      </Modal>
+      </ReactModal>
       <div>
         <DashboardHeading
           title="Account information"

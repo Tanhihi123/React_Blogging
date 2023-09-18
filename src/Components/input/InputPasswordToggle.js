@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import Input from './input';
 import { IconEyeClose, IconEyeOpen } from 'Components/Icon';
 
-const InputPasswordToggle = ({control,value=""}) => {
+const InputPasswordToggle = ({control}) => {
     const [togglePassword,setTogglePassword] = useState(false);
     if(!control) return null;
     return (
@@ -12,7 +12,6 @@ const InputPasswordToggle = ({control,value=""}) => {
               type={togglePassword ? "text" : "password"}
               placeholder="Enter Your Password"
               control={control}
-              value={value}
             >
               {!togglePassword ? (
                 <IconEyeClose
