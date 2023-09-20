@@ -107,7 +107,7 @@ const PostDetailsPage = () => {
   useEffect(() => {
     async function fetchData() {
       if (!slug) return;
-      const colRef = query(collection(db, "posts"), where("slug", "==", slug));
+      const colRef = query(collection(db, "posts"), where("slug", "==", slug),where("status","==",1));
       onSnapshot(colRef, (snapshot) => {
         snapshot.forEach((doc) => {
           doc.data() && setPostInfo(doc.data());

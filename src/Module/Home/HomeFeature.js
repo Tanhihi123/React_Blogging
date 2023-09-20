@@ -17,7 +17,6 @@ import { Pagination } from "swiper/modules";
 const HomeFeatureStyles = styled.div``;
 const HomeFeature = () => {
   const [posts, setPosts] = useState([]);
-  const [show, setShow] = useState(false);
   useEffect(() => {
     const colRef = collection(db, "posts");
     const queries = query(
@@ -37,12 +36,6 @@ const HomeFeature = () => {
       setPosts(rs);
     });
   }, []);
-  const handleMouseEnter = () => {
-    setShow(true);
-  };
-  const handleMouseLeave = () => {
-    setShow(false);
-  };
   if (posts.length < 0) return null;
   return (
     <div>
@@ -51,8 +44,6 @@ const HomeFeature = () => {
           <Heading>Bài viết nổi bật</Heading>
           <div
             className={`swiper-layout`}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
           >
             <Swiper
               grabCursor={"true"}
@@ -80,14 +71,6 @@ const HomeFeature = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-            {/* {show && (
-              <div className="relative w-40 h-14 rounded-lg bg-[#A4D96C] p-2 -translate-y-[360px] translate-x-[500px]">
-                <span className="absolute top-4 inline-flex font-bold animate-text-gradient bg-gradient-to-r from-[rgb(123,197,231)] via-[#8678f9] to-[#06e2f2] bg-[200%_auto] bg-clip-text text-xl text-transparent ">
-                  <p>Kéo qua phải</p>
-                </span>
-                <div className="triangle-down"></div>
-              </div>
-            )} */}
           </div>
         </div>
       </HomeFeatureStyles>

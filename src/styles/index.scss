@@ -20,6 +20,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  scroll-behavior: smooth;
 }
 
 img,
@@ -136,7 +137,7 @@ input:-webkit-autofill:active {
   .ql-container.ql-snow{
     @apply border-none text-base;
   }
-}  
+}
 .triangle-down {
   position: absolute;
   bottom: 0;
@@ -148,6 +149,10 @@ input:-webkit-autofill:active {
   border-right: 8px solid transparent;
   border-top: 12px solid #a4d96c;
 }
-.ReactModal__Body--open{
+.ReactModal__Body--open {
   overflow: hidden;
+}
+.fb {
+  width: 100%;
+  height: 100%;
 }

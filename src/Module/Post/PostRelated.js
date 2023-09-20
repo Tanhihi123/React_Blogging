@@ -12,7 +12,8 @@ const PostRelated = ({ categoryId = "" }) => {
   useEffect(() => {
     const docRef = query(
       collection(db, "posts"),
-      where("categoryId", "==", categoryId)
+      where("categoryId", "==", categoryId),
+      where("status","==",1)
     );
     onSnapshot(docRef, (snapshot) => {
       const rs = [];

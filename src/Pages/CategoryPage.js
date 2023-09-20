@@ -15,7 +15,8 @@ const CategoryPage = () => {
     async function fetchData() {
       const docRef = query(
         collection(db, "posts"),
-        where("category.slug", "==", params.slug)
+        where("category.slug", "==", params.slug),
+        where("status","==",1)
       );
       onSnapshot(docRef,(snapshot) => {
         const rs = [];

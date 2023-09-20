@@ -246,7 +246,7 @@ const PostAddNew = () => {
               onClick={() => setValue("hot", !watchHot)}
             ></Toggle>
           </Field>
-          <Field>
+          {/* <Field>
             <Label>Status</Label>
             <div className="flex items-center gap-x-5">
               <Radio
@@ -274,7 +274,7 @@ const PostAddNew = () => {
                 Reject
               </Radio>
             </div>
-          </Field>
+          </Field> */}
         </div>
         <Button
           type="submit"

@@ -1,6 +1,6 @@
 import { Button } from "Components/Button";
 import { useAuth } from "Contexts/Auth-context";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
@@ -61,34 +61,41 @@ const menuLinks = [
     title: "Home",
   },
   {
-    url: "/blog",
+    url: "/",
     title: "Blog",
   },
   {
-    url: "/contact",
+    url: "/",
     title: "Contact",
   },
 ];
 function getLastName(name) {
-  if(!name) return "User"
+  if (!name) return "User";
   const length = name.split(" ").length;
   return name.split(" ")[length - 1];
 }
 const Header = () => {
   const { userInfo } = useAuth();
+  const [move, setMove] = useState("");
+  useEffect(() => {
+    if (move === "Contact") {
+      document.body.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+  }, [move]);
   return (
     <HeaderStyles>
       <div className="container">
         <div className="header-man">
           <NavLink to="/">
-            <img srcSet="./logo.png 2x" alt="Tanhihi" className="logo" />
+            <img srcSet="/logo.png 2x" alt="Tanhihi" className="logo" />
           </NavLink>
           <ul className="menu">
             {menuLinks.map((item) => (
-              <li className="menu-item hover:-translate-y-1 font-bold" key={item.title}>
-                <NavLink to={item.url} className="menu-link">
-                  {item.title}
-                </NavLink>
+              <li
+                className="menu-item hover:-translate-y-1 font-bold cursor-pointer select-none"
+                key={item.title}
+              >
+                <span onClick={() => setMove("Contact")}>{item.title}</span>
               </li>
             ))}
           </ul>

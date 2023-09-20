@@ -40,12 +40,13 @@ const PostManage = () => {
             where("title", ">=", filter),
             where("title", "<=", filter + "utf8")
           )
-        : query(colRef, limit(POST_PER_PAGE));
+        : query(colRef, where("status", "==", 1),limit(POST_PER_PAGE));
       const documentSnapshots = await getDocs(newRef);
       const lastVisible =
         documentSnapshots.docs[documentSnapshots.docs.length - 1];
-      onSnapshot(colRef, (snapshot) => {
+      onSnapshot(newRef, (snapshot) => {
         setTotal(snapshot.size);
+        console.log(total);
       });
       onSnapshot(newRef, (snapshot) => {
         let rs = [];
@@ -60,6 +61,7 @@ const PostManage = () => {
       setLastDoc(lastVisible);
     }
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
   function handleDeletePost(postId) {
     const docRef = doc(db, "posts", postId);
@@ -83,7 +85,7 @@ const PostManage = () => {
       case postStatus.APPROVED:
         return <LabelStatus type="success">Approve</LabelStatus>;
       case postStatus.PENDING:
-        return <LabelStatus type="warning">Peding</LabelStatus>;
+        return <LabelStatus type="warning">Pending</LabelStatus>;
       case postStatus.REJECTED:
         return <LabelStatus type="danger">Rejected</LabelStatus>;
       default:

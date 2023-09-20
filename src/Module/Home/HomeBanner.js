@@ -28,7 +28,7 @@ const HomeBannerStyles = styled.div`
       margin-bottom: 40px;
     }
   }
-  @media screen and (max-width : 768px) {
+  @media screen and (max-width: 768px) {
     .banner {
       &-avatar {
         display: none;
@@ -46,9 +46,9 @@ const HomeBanner = () => {
           <div className="banner-content">
             <h1 className="banner-heading">Blogging by Tan</h1>
             <p className="banner-desc">
-              Xin tự giới thiệu , mình là một front-end developer trẻ tuổi ,
-              cũng là một trader crypto , hy vọng các bạn sẽ có một trải nghiệm
-              tốt nhất !! Thanks a lot , peace .......
+              Xin tự giới thiệu , mình là một front-end developer trẻ tuổi , hy
+              vọng các bạn sẽ có một trải nghiệm tốt nhất !! Thanks a lot ,
+              peace .......
             </p>
             <Button onClick={() => navigate("/sign-in")} kind="secondary">
               Get started
