@@ -133,16 +133,6 @@ input:-webkit-autofill:active {
     border: none;
     @apply bg-[#B2B3BD] bg-opacity-10 rounded-xl py-3 px-5 inline-block;
   }
-  .ql-container.ql-snow{
-    @apply border-none text-base;
-  }
-  .ql-editor {
-    @apply pt-10;
-  }
-  .ql-editor.ql-blank::before {
-    font-style: normal;
-    @apply text-sm not-italic text-[#B2B3BD];
-  }
 }  
 .triangle-down {
   position: absolute;
