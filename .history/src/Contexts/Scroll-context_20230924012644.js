@@ -1,0 +1,21 @@
+const { createContext, useContext, useState } = require("react");
+
+const ScrollContext = createContext();
+function ScrollProvider(props) {
+  const [className,setClassName] = useState("");
+  const value = {}
+  function HandleScroll(classname) {
+    document.querySelector(classname).scrollIntoView({
+      behavior: "smooth",
+    });
+  }
+  Handle
+  return <ScrollContext.Provider value={value} {...props} ></ScrollContext.Provider>
+}
+function useScroll() {
+  const context = useContext(ScrollContext);
+  if (typeof context === "undefined")
+    throw new Error("useScroll must be used within ScrollProvider");
+  return context;
+}
+export {ScrollProvider,useScroll}

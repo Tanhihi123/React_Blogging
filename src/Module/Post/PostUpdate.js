@@ -127,7 +127,7 @@ const PostUpdate = () => {
             headers: {
               "content-Type": "multipart/form-data",
             },
-          }); 
+          });
           return response.data.data.url;
         },
       },
@@ -136,13 +136,16 @@ const PostUpdate = () => {
   );
   if (!postId) return null;
   const updatePostHandler = async (values) => {
-    if(!isValid) return;
+    if (!isValid) return;
     const docRef = doc(db, "posts", postId);
     await updateDoc(docRef, {
       ...values,
+      status: +values.status,
       content,
     });
     toast.success("Update post successfully !");
+    // console.log(values);
+    // console.log(+postStatus.APPROVED);
   };
   return (
     <>
@@ -231,24 +234,24 @@ const PostUpdate = () => {
               <Radio
                 name="status"
                 control={control}
-                checked={+watchStatus === postStatus.APPROVED}
-                value={postStatus.APPROVED}
+                checked={+watchStatus === +postStatus.APPROVED}
+                value={+postStatus.APPROVED}
               >
                 Approved
               </Radio>
               <Radio
                 name="status"
                 control={control}
-                checked={+watchStatus === postStatus.PENDING}
-                value={postStatus.PENDING}
+                checked={+watchStatus === +postStatus.PENDING}
+                value={+postStatus.PENDING}
               >
                 Pending
               </Radio>
               <Radio
                 name="status"
                 control={control}
-                checked={+watchStatus === postStatus.REJECTED}
-                value={postStatus.REJECTED}
+                checked={+watchStatus === +postStatus.REJECTED}
+                value={+postStatus.REJECTED}
               >
                 Reject
               </Radio>

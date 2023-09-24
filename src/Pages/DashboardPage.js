@@ -1,28 +1,41 @@
-import { ActionDelete, ActionEdit, ActionView } from "Components/Action";
+import { ActionDelete, ActionEdit } from "Components/Action";
 import { Button } from "Components/Button";
 import { Table } from "Components/Table";
 import { LabelStatus } from "Components/label";
 import { useAuth } from "Contexts/Auth-context";
 import { db } from "FirebaseApp/Firebase-config";
 import DashboardHeading from "Module/Dashboard/DashboardHeading";
-import { collection, deleteDoc, doc, getDocs, limit, onSnapshot, query, startAfter, where } from "firebase/firestore";
-import { filter } from "lodash";
-import React, { useEffect, useState } from "react";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  limit,
+  onSnapshot,
+  query,
+  startAfter,
+  where,
+} from "firebase/firestore";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { postStatus, userRole } from "utils/constants";
 
-const POST_PER_PAGE = 5
+const POST_PER_PAGE = 5;
 const DashboardPage = () => {
   const [postList, setPostList] = useState([]);
   const navigate = useNavigate();
   const [lastDoc, setLastDoc] = useState();
   const [total, setTotal] = useState(0);
-  const {userInfo} = useAuth();
+  const { userInfo } = useAuth();
   useEffect(() => {
     async function fetchData() {
       const colRef = collection(db, "posts");
-      const newRef = query(colRef,where("status","!=",1), limit(POST_PER_PAGE));
+      const newRef = query(
+        colRef,
+        where("status", "!=", 1),
+        limit(POST_PER_PAGE)
+      );
       const documentSnapshots = await getDocs(newRef);
       const lastVisible =
         documentSnapshots.docs[documentSnapshots.docs.length - 1];
@@ -97,84 +110,83 @@ const DashboardPage = () => {
   return (
     <div>
       <div className="mb-10 flex justify-between">
-        {+userInfo.role === userRole.ADMIN ? 
-        <DashboardHeading
-          title="Request Post From User"
-        ></DashboardHeading>
-        :
-        <DashboardHeading
-          title="Chỉ ADMIN mới có quyền truy cập"
-        ></DashboardHeading>
-        }
+        {+userInfo.role === userRole.ADMIN ? (
+          <DashboardHeading title="Request Post From User"></DashboardHeading>
+        ) : (
+          <DashboardHeading title="Chỉ ADMIN mới có quyền truy cập"></DashboardHeading>
+        )}
       </div>
-      {+userInfo.role === userRole.ADMIN && 
-      
-      <Table>
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Post</th>
-            <th>Category</th>
-            <th>Author</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {postList.length > 0 &&
-            postList.map((post) => {
-              const date = post?.createdAt?.seconds
-                ? new Date(post?.createdAt?.seconds * 1000)
-                : new Date();
-              const formatDate = new Date(date).toLocaleDateString("vi-VI");
-              return (
-                <tr key={post.id}>
-                  <td title={post.id}>{post.id?.slice(0, 5) + "..."}</td>
-                  <td>
-                    <div className="flex items-center gap-x-3">
-                      <img
-                        src={post.image}
-                        alt=""
-                        className="w-[66px] h-[55px] rounded object-cover"
-                      />
-                      <div className="flex-1  whitespace-pre-wrap">
-                        <h3 className="font-semibold max-w-[300px]">
-                          {post.title}
-                        </h3>
-                        <time className="text-sm text-gray-500">
-                          Date: {formatDate}
-                        </time>
+      {+userInfo.role === userRole.ADMIN && (
+        <Table>
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Post</th>
+              <th>Category</th>
+              <th>Author</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {postList.length > 0 &&
+              postList.map((post) => {
+                const date = post?.createdAt?.seconds
+                  ? new Date(post?.createdAt?.seconds * 1000)
+                  : new Date();
+                const formatDate = new Date(date).toLocaleDateString("vi-VI");
+                return (
+                  <tr key={post.id}>
+                    <td title={post.id}>{post.id?.slice(0, 5) + "..."}</td>
+                    <td>
+                      <div className="flex items-center gap-x-3">
+                        <img
+                          src={post.image}
+                          alt=""
+                          className="w-[66px] h-[55px] rounded object-cover"
+                        />
+                        <div className="flex-1  whitespace-pre-wrap">
+                          <h3 className="font-semibold max-w-[300px]">
+                            {post.title}
+                          </h3>
+                          <time className="text-sm text-gray-500">
+                            Date: {formatDate}
+                          </time>
+                        </div>
                       </div>
-                    </div>
-                  </td>
-                  <td>
-                    <span className="text-gray-500">{post.category?.name}</span>
-                  </td>
-                  <td>
-                    <span className="text-gray-500">{post.user?.fullname}</span>
-                  </td>
-                  <td>{renderPostStatus(+post.status)}</td>
-                  <td>
-                    <div className="flex items-center gap-x-3 text-gray-500">
-                      {/* <ActionView
+                    </td>
+                    <td>
+                      <span className="text-gray-500">
+                        {post.category?.name}
+                      </span>
+                    </td>
+                    <td>
+                      <span className="text-gray-500">
+                        {post.user?.fullname}
+                      </span>
+                    </td>
+                    <td>{renderPostStatus(+post.status)}</td>
+                    <td>
+                      <div className="flex items-center gap-x-3 text-gray-500">
+                        {/* <ActionView
                         onClick={() => navigate(`/${post.slug}`)}
                       ></ActionView> */}
-                      <ActionEdit
-                        onClick={() =>
-                          navigate(`/manage/update-post?id=${post.id}`)
-                        }
-                      ></ActionEdit>
-                      <ActionDelete
-                        onClick={() => handleDeletePost(post.id)}
-                      ></ActionDelete>
-                    </div>
-                  </td>
-                </tr>
-              );
-            })}
-        </tbody>
-      </Table>
-      }
+                        <ActionEdit
+                          onClick={() =>
+                            navigate(`/manage/update-post?id=${post.id}`)
+                          }
+                        ></ActionEdit>
+                        <ActionDelete
+                          onClick={() => handleDeletePost(post.id)}
+                        ></ActionDelete>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </Table>
+      )}
       {total > postList.length && +userInfo.role === userRole.ADMIN && (
         <div className="mt-10 text-center">
           <Button className="mx-auto w-[200px]" onClick={handleLoadMorePost}>
